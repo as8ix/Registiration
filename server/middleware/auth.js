@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken'
-import ENV from '../router/config.js'
+import jwt from 'jsonwebtoken';
+import ENV from '../router/config.js';
 
-
+/** auth middleware */
 export default async function Auth(req, res, next){
     try {
         
@@ -19,6 +19,7 @@ export default async function Auth(req, res, next){
         res.status(401).json({ error : "Authentication Failed!"})
     }
 }
+
 
 export function localVariables(req, res, next){
     req.app.locals = {

@@ -1,27 +1,29 @@
-import nodemailer from 'nodemailer'
-import Mailgen from 'mailgen'
+import nodemailer from 'nodemailer';
+import Mailgen from 'mailgen';
 
-import ENV from '../router/config.js'
+import ENV from '../router/config.js';
 
+
+// https://ethereal.email/create
 let nodeConfig = {
     host: "smtp.ethereal.email",
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: ENV.EMAIL, // generated ethereal user
-      pass: ENV.PASSWORD, // generated ethereal password
-    },
+        user: ENV.EMAIL, // generated ethereal user
+        pass: ENV.PASSWORD, // generated ethereal password
+    }
 }
-let transporter = nodemailer.createTransport(nodeConfig)
+
+let transporter = nodemailer.createTransport(nodeConfig);
 
 let MailGenerator = new Mailgen({
     theme: "default",
-    product: {
-        name: "As8ix",
-        link: 'https//mailgen.js/'
+    product : {
+        name: "Mailgen",
+        link: 'https://mailgen.js/'
     }
 })
-
 
 /** POST: http://localhost:8080/api/registerMail 
  * @param: {
@@ -31,29 +33,32 @@ let MailGenerator = new Mailgen({
   "subject" : "",
 }
 */
-export const registerMail = async (req,res)=>{
-    const {username, userEmail, text, subject} = req.body;
+export const registerMail = async (req, res) => {
+    const { username, userEmail, text, subject } = req.body;
 
-    // body of the email 
+    // body of the email
     var email = {
-        body: {
+        body : {
             name: username,
-            intro: text || 'Welcome to as8ix website. we\'re very exited to have you with us. ',
-            outro: 'need help, or have some questions? Just reply to this email, and we\'d love to help.',
-
+            intro : text || 'Welcome to Daily Tuition! We\'re very excited to have you on board.',
+            outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
         }
     }
+
     var emailBody = MailGenerator.generate(email);
 
-    let message ={
-        from: ENV.EMAIL,
+    let message = {
+        from : ENV.EMAIL,
         to: userEmail,
-        subject: subject || "Signup Successfull",
-        html: emailBody
+        subject : subject || "Signup Successful",
+        html : emailBody
     }
+
+    // send mail
     transporter.sendMail(message)
-    .then(()=> {
-        return res.status(200).send({msg : "You received an email from us."})
-    })
-    .catch(error => res.status(500).send({error}))
+        .then(() => {
+            return res.status(200).send({ msg: "You should receive an email from us."})
+        })
+        .catch(error => res.status(500).send({ error }))
+
 }

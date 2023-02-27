@@ -17,7 +17,7 @@ export default function Password() {
 
   const formik = useFormik({
     initialValues : {
-      password : '!123456789g'
+      password : ''
     },
     validate : passwordValidate,
     validateOnBlur: false,
